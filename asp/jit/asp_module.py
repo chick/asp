@@ -318,7 +318,7 @@ class ASPBackend(object):
 
 class ASPModule(object):
     """
-    ASPModule is the main coordination class for specializers.  A specializer creates an ASPModule to contain
+    ASPModule is the main coordination class for examples.  A specializer creates an ASPModule to contain
     all of its specialized functions, and adds functions/libraries/etc to the ASPModule.
 
     ASPModule uses ASPBackend instances for each backend, ASPDB for its backing db for recording timing info,

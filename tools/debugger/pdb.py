@@ -4,7 +4,7 @@ import os
 
 class pdb(object):
     def __init__(self, python_file, python_start_line):
-        self.process = subprocess.Popen(["PYTHONPATH=../../specializers/stencil:../.. python -u /usr/bin/pdb " + python_file],shell=True,stdin=subprocess.PIPE,stdout=subprocess.PIPE,stderr=subprocess.PIPE, cwd='.')
+        self.process = subprocess.Popen(["PYTHONPATH=../../examples/stencil:../.. python -u /usr/bin/pdb " + python_file],shell=True,stdin=subprocess.PIPE,stdout=subprocess.PIPE,stderr=subprocess.PIPE, cwd='.')
         for line in python_start_line:
             self.process.stdin.write(line + "\n")
 
