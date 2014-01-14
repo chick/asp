@@ -17,6 +17,9 @@ then
 fi
 
 PYTHONPATH=`pwd`:${PYTHONPATH} ${PYTHON} ${PYTHONARGS} tests/asp_module_tests.py
+echo module tests done
+exit 0
+
 PYTHONPATH=`pwd`:${PYTHONPATH} ${PYTHON} ${PYTHONARGS} tests/cpp_ast_test.py
 PYTHONPATH=`pwd`:${PYTHONPATH} ${PYTHON} ${PYTHONARGS} tests/ast_tools_test.py
 
