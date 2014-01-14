@@ -35,7 +35,9 @@ setup(name="asp",
       license = "BSD",
 
       packages=["asp", "asp.codegen", "asp.codegen.templating", "asp.jit", "asp.ply", "asp.avro_inter"],
-      dependency_links = ['http://github.com/shoaibkamil/codepy/tarball/master#egg=codepy-2013.3.sk'],
+      # dependency_links = ['http://github.com/shoaibkamil/codepy/tarball/master#egg=codepy-2013.3.sk'],
+      # above dependency seems to be related to the mac osx switch to clang
+      # but it breaks vagrant system after 'python setup.py'
       install_requires=[
         "numpy",
         "codepy>=2013.1",
