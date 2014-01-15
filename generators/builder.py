@@ -8,9 +8,21 @@ import sys
 from mako.template import Template
 
 class Builder:
+    """
+    Class that creates a directory and file hierarchy based on a template directory
+    ordinary files are copied as is
+    *.mako files are rendered with mako into files with the .mako removed
+    """
+    verbose_key = 'verbose'
+
+
     def __init__(self,template_family,target_base,**kwargs):
         self.target_base = target_base
         self.template_family = template_family
+        self.verbose = False
+
+        if kwargs[Builder.verbose_key]:
+            self.verbose = kwargs[Builder.verbose_key]
 
     def build(self,template_dir,target_dir,depth=0):
         """
@@ -21,7 +33,8 @@ class Builder:
         """
 
         def iprint( s ):
-            print ( ' ' * depth ) + s
+            if self.verbose:
+                print ( ' ' * depth ) + s
 
         if template_dir == None:
             a = os.path.dirname(os.path.abspath(inspect.getfile(inspect.currentframe())))
@@ -58,7 +71,6 @@ class Builder:
 
                     f1=open(file_name,'w+')
                     iprint( "Rendering %s" % file_name )
-                    iprint( template.render(specializer_name=self.target_base) )
                     print >>f1, template.render(specializer_name=self.target_base)
                     f1.close()
                 else:
