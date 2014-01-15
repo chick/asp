@@ -1,10 +1,11 @@
 #
-#
+# generate stuff for development of specializers
+# currently only supported command is create
 #
 
 if test -z "$*"
 then
-    echo "Usage $0:"
+    echo "Usage $0: create <specializer_name>"
 fi
 
 if test "$1" = "create"
