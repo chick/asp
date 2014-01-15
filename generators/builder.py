@@ -14,9 +14,9 @@ class Builder:
 
     def build(self,template_dir,target_dir,depth=0):
         """
-        reads current_directory
-        each directory founds is created
-        each *.mako file is processed as a template and created without extension
+        walks the template_dir
+        each directory founds is created in associated target_dir
+        each *.mako file is processed as a template and created without .mako
         other files are copied as is
         """
 
@@ -46,22 +46,26 @@ class Builder:
             exit(1)
 
         files = os.listdir( template_dir )
-        print "files " + ",".join(files)
+        iprint( "files " + ",".join(files) )
         for file in files:
             source_file = os.path.join( template_dir, file )
             target_file = os.path.join( target_dir, file )
 
             if os.path.isfile( source_file ):
-                if file.endswith(".mako"):
+                if source_file.endswith(".mako"):
                     template = Template(filename=source_file)
-                    file_name = source_file[:-5]
-                    print "Rendering %s" % file_name
-                    print template.render(specializer_name=self.target_base)
+                    file_name = target_file[:-5]
+
+                    f1=open(file_name,'w+')
+                    iprint( "Rendering %s" % file_name )
+                    iprint( template.render(specializer_name=self.target_base) )
+                    print >>f1, template.render(specializer_name=self.target_base)
+                    f1.close()
                 else:
-                    print "processing ordinary file %s" % source_file
-                    shutil.copyfileobj( source_file, target_file )
-            elif os.path.isdir(file):
-                print "processing directory %s" % file
+                    iprint( "processing ordinary file %s" % source_file )
+                    shutil.copyfile( source_file, target_file )
+            elif os.path.isdir(source_file):
+                iprint( "processing directory %s" % file )
                 self.build(source_file,target_file,depth+1)
 
 
