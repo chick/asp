@@ -8,11 +8,14 @@ then
     echo "Usage $0: create <specializer_name>"
 fi
 
+script_dir="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
+echo "Dir is $DIR"
+
 if test "$1" = "create"
 then
   if test -n "$2"
   then
-    python generators/create.py $2
+    python $script_dir/generators/create.py $2
   else
     echo "Usage: $0 create <specializer_name>"
     exit 1
