@@ -1,3 +1,7 @@
 *.pyc
 .*.swp
 .idea
+asp.egg-info
+build
+dist
+

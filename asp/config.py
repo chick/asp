@@ -2,7 +2,6 @@ import re
 import yaml
 import os
 import asp.jit.asp_module as asp_module
-from codepy.cgen import Include
 
 
 class CompilerDetector(object):

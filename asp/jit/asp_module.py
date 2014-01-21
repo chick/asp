@@ -364,6 +364,7 @@ class ASPModule(object):
             self.backends["cilk"] = self.backends["c++"]
             self.backends["cilk"].toolchain.cc = "icc"
         if use_tbb:
+            # Intel Thread Building Blocks
             self.backends["tbb"] = self.backends["c++"]
             self.backends["tbb"].toolchain.cflags += ["-ltbb"]
         if use_pthreads:
