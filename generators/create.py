@@ -1,11 +1,8 @@
 __author__ = 'chick'
 
 import sys
-import os
 
 import builder as Builder
-
-project_directories = ["cache","code","doc","examples","templates","tests"]
 
 if __name__ == '__main__':
     args = sys.argv

@@ -4,7 +4,7 @@
 from codepy.cgen import *
 from codepy.bpl import BoostPythonModule
 from codepy.cuda import CudaModule
-from codepy.cgen.cuda import CudaGlobal
+from cgen.cuda import CudaGlobal
 import asp.jit.asp_module as asp_module
 import unittest2 as unittest
 

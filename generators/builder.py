@@ -12,6 +12,7 @@ class Builder:
     Class that creates a directory and file hierarchy based on a template directory
     ordinary files are copied as is
     *.mako files are rendered with mako into files with the .mako removed
+    if the template directory name is code then it is changed to the target_base
     """
     verbose_key = 'verbose'
 
@@ -32,7 +33,7 @@ class Builder:
         other files are copied as is
         """
 
-        def iprint(s):
+        def indent_print(s):
             if self.verbose:
                 print (' ' * depth) + s
 
@@ -48,8 +49,8 @@ class Builder:
             #)
             target_dir = self.target_base
 
-        iprint("template dir is %s" % template_dir)
-        iprint("target dir is %s" % target_dir)
+        indent_print("template dir is %s" % template_dir)
+        indent_print("target dir is %s" % target_dir)
 
         try:
             os.makedirs(target_dir)
@@ -59,7 +60,7 @@ class Builder:
             exit(1)
 
         files = os.listdir(template_dir)
-        iprint("files " + ",".join(files))
+        indent_print("files " + ",".join(files))
         for file in files:
             source_file = os.path.join(template_dir, file)
             target_file = os.path.join(target_dir, file)
@@ -70,15 +71,15 @@ class Builder:
                     file_name = target_file[:-5]
 
                     f1=open(file_name,'w+')
-                    iprint("Rendering %s" % file_name)
+                    indent_print("Rendering %s" % file_name)
                     print >>f1, template.render(specializer_name=self.target_base)
                     f1.close()
                 else:
-                    iprint("processing ordinary file %s" % source_file)
+                    indent_print("processing ordinary file %s" % source_file)
                     if file != '.gitignore':
                         shutil.copyfile(source_file, target_file)
             elif os.path.isdir(source_file):
-                iprint("processing directory %s" % file)
+                indent_print("processing directory %s" % file)
                 destination = target_file if file != 'code' else os.path.join(target_dir, self.target_base)
 
                 self.build(source_file, destination, depth+1)
