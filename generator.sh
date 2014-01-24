@@ -9,7 +9,10 @@ then
 fi
 
 script_dir="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
-# echo "Dir is $DIR"
+# echo "Dir is $script_dir"
+
+export PYTHONPATH=$script_dir:$PYTHONPATH
+# echo "PYTHONPATH=$PYTHONPATH"
 
 if test "$1" = "create"
 then
