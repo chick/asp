@@ -1,10 +1,10 @@
 __author__ = 'chick'
 
 import os
+import stat
 import inspect
 import shutil
 
-import sys
 from mako.template import Template
 
 class Builder:
@@ -33,6 +33,8 @@ class Builder:
         other files are copied as is
         """
 
+        make_executable=False
+
         def indent_print(s):
             if self.verbose:
                 print (' ' * depth) + s
@@ -59,6 +61,9 @@ class Builder:
                 (template_dir,exception.errno,exception.strerror)
             exit(1)
 
+        if target_dir[-4:] == '/bin':
+            make_executable = True
+
         files = os.listdir(template_dir)
         indent_print("files " + ",".join(files))
         for file in files:
@@ -78,6 +83,8 @@ class Builder:
                     indent_print("processing ordinary file %s" % source_file)
                     if file != '.gitignore':
                         shutil.copyfile(source_file, target_file)
+                        st = os.stat(target_file)
+                        os.chmod(target_file, st.st_mode | stat.S_IEXEC | stat.S_IXOTH | stat.S_IXGRP)
             elif os.path.isdir(source_file):
                 indent_print("processing directory %s" % file)
                 destination = target_file if file != 'code' else os.path.join(target_dir, self.target_base)
