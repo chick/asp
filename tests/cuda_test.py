@@ -16,7 +16,8 @@ class CUDATest(unittest.TestCase):
         mod.add_to_preamble("""
         #define N 10
         void add_launch(int*,int*,int*);
-        """,backend="c++") 
+        """, backend="c++")
+
         mod.add_helper_function("foo_1", """int foo_1(){
         int a[N], b[N], c[N];
         int *dev_a, *dev_b, *dev_c;
@@ -38,6 +39,7 @@ class CUDATest(unittest.TestCase):
         cudaFree( dev_b );
         cudaFree( dev_c );
         return 0;}""",backend="cuda")
+
         # create device code
         mod.add_to_module("""
         #define N 10
@@ -50,6 +52,7 @@ class CUDATest(unittest.TestCase):
             add<<<N,1>>>( a, b, c );
         }
         """, backend='cuda')
+
         # test a call
         ret = mod.foo_1() 
         self.assertTrue(ret == 0)

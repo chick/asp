@@ -22,9 +22,7 @@ class Capability(object):
         self.is_linux = 'linux' in sys.platform
 
     def get_compilers(self):
-
-
-
+        pass
 
     def is_mac(self):
         self.is_mac

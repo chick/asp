@@ -67,7 +67,7 @@ class ASPDBTests(unittest.TestCase):
         db.insert("func", "func", "KEY", 4.321)
 
         db.connection.execute.assert_called_with(
-                'insert into test values (?,?,?,?)', ("func", "func", "KEY", 4.321))
+            'insert into test values (?,?,?,?)', ("func", "func", "KEY", 4.321))
 
     def test_create_if_insert_into_nonexistent_table(self):
         db = asp_module.ASPDB("test")
@@ -315,7 +315,7 @@ class MultipleFuncTests(unittest.TestCase):
         mod.foo(10)
         mod.foo(10)
 
-        self.assertEqual(len(filter(lambda x: x[1]==u'foo_2',mod.db.get("foo"))),1)
+        self.assertEqual(len(filter(lambda x: x[1] == u'foo_2',mod.db.get("foo"))),1)
 
 
 """
