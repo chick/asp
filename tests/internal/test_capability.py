@@ -33,6 +33,11 @@ class CpText(unittest.TestCase):
         num_cores = cp.apply(['machdep.cpu.core_count: 4','machdep.cpu.core_count: 7'])
         assert num_cores == 11
 
+        # cp can accumulate, but returns zero if acc set but no matches to apply
+        cp = capability.CP('num_cores',".*core_count:\s+(\d+)",acc=True,conv=int)
+        num_cores = cp.apply(['machdep.cpu.proc_count: 4','machdep.cpu.proc_count: 7'])
+        assert num_cores == 0
+
 
 class MacTest(unittest.TestCase):
     mac_raw_info = open("mac_raw_info.txt","r").readlines()
@@ -50,15 +55,25 @@ class MacTest(unittest.TestCase):
             assert c.is_mac() == False
             assert c.is_linux() == True
 
-    def test_num_cores(self):
+    def test_num_cores_mac(self):
         c = capability.Capability()
         with patched_context( c, 'get_raw_info', lambda x: MacTest.mac_raw_info ):
             assert sum( 'machdep.cpu' in x for x in c.get_raw_info() ) > 0
             c.update_info()
 
             assert c.raw_info == c.get_raw_info()
-
-            print 'num_cores ', c.num_cores
             assert c.num_cores == 4
+
+    def test_num_cores_linux(self):
+        with patched_context(sys, 'platform', "linux2" ):
+            c = capability.Capability()
+            with patched_context( c, 'get_raw_info', lambda x: MacTest.linux_raw_info ):
+                assert sum( 'processor' in x for x in c.get_raw_info() ) > 0
+                c.update_info()
+
+                assert c.raw_info == c.get_raw_info()
+
+                # print 'num_cores ', c.num_cores
+                assert c.num_cores == 0
 
 

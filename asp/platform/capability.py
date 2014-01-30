@@ -53,22 +53,21 @@ class Capability(object):
     def update_info(self):
         self.raw_info = self.get_raw_info()
 
-        self.cores = 0
+        parser_list = []
         if self.is_mac():
             parser_list = [
                 CP("num_cores",".*core_count:\s+(\d+).*",conv=int)
             ]
-            for config_parser in parser_list:
-                print 'config parser ', config_parser.attr
-                self.__dict__[ config_parser.attr ] = config_parser.apply( self.raw_info )
-
-
         elif self.is_linux():
             parser_list = [
-                CP("num_processors",".^processor\s*:\s+(\d+).*",acc=True,conv=int)
-                CP("num_cores",".*cpu cores\s*:\s+(\d+).*",acc=True,conv=int)
+                CP("num_processors", ".^processor\s*:\s+(\d+).*", acc=True, conv=int),
+                CP("num_cores", ".*cpu cores\s*:\s+(\d+).*", default=0, acc=True, conv=int)
             ]
-            self.raw_info = open("/proc/cpuinfo", "r").readlines()
+        for config_parser in parser_list:
+            # print 'config parser ', config_parser.attr
+            self.__dict__[ config_parser.attr ] = config_parser.apply( self.raw_info )
+
+
 
     def get_raw_info(self):
         if self.is_mac():
@@ -85,10 +84,10 @@ class CP(object):
     configuration parser, a name a regex, used to pull out a field
     and whether to accumulate the field, if found on multiple lines
     """
-    def __init__(self,attr,regex,default=None,acc=False,conv=lambda x: x):
+    def __init__(self, attr, regex, default=None, acc=False, conv=lambda x: x):
         self.attr = attr
         self.regex = re.compile( regex )
-        self.default = 0 if acc == True else default
+        self.default = 0 if acc else default
         self.accumulate = acc
         self.conv = conv
 
