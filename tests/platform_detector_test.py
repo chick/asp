@@ -17,6 +17,9 @@ class CPUInfoTests(unittest.TestCase):
         PlatformDetector.read_cpu_info = read_cpu_info
         pd = PlatformDetector()
 
+        print "X" * 100
+        print "X" * 100
+        print "X" * 100
         info = pd.get_cpu_info()
         self.assertEqual(info['numCores'], 8)
     

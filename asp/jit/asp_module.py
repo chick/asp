@@ -326,7 +326,7 @@ class ASPModule(object):
     """
 
     #FIXME: specializer should be required.
-    def __init__(self, specializer="default_specializer", cache_dir=None, use_cuda=False, use_cilk=False, use_tbb=False, use_pthreads=False, use_scala=False):
+    def __init__(self, specializer="default_specializer", cache_dir=None, use_cuda=False, use_cilk=False, use_tbb=False, use_pthreads=False, use_scala=False, use_openmp=False, use_opencl=False):
 
         self.specialized_functions= {}
         self.helper_method_names = []
@@ -370,6 +370,15 @@ class ASPModule(object):
         if use_pthreads:
             self.backends["pthreads"] = self.backends["c++"]
             self.backends["pthreads"].toolchain.cflags += ["-pthread"]	    
+        if use_openmp:
+            self.backends["openmp"] = self.backends["c++"]
+            # TODO make this compiler dependent, this should work, but some compilers
+            # use other flags see: http://openmp.org/wp/openmp-compilers/
+            self.backends["openmp"].toolchain.cflags += ["-fopenmp"]
+        if use_opencl:
+            self.backends["opencl"] = self.backends["c++"]
+            if platform.system() == 'darwin':
+                self.backends["opencl"].toolchain.cflags += ["-fopenmp"]
         if use_scala:
             self.backends["scala"] = ASPBackend(scala_module.ScalaModule(),
                                                 scala_module.ScalaToolchain(),

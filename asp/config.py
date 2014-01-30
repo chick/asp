@@ -96,7 +96,10 @@ class PlatformDetector(object):
         return info
 
     def get_cpu_info(self):
+        print "Z" * 100
+
         self.rawinfo = self.read_cpu_info()
+        print "Z" * 100
         info = {}
         info['numCores'] = self.parse_num_cores()
         info['vendorID'] = self.parse_cpu_info('vendor_id')
@@ -130,7 +133,12 @@ class PlatformDetector(object):
                 return re.match(matcher, line).group(1)
         
     def read_cpu_info(self):
-        return open("/proc/cpuinfo", "r").readlines()
+        x =  open("/proc/cpuinfo", "r").readlines()
+        print "Y" * 100
+
+        print x
+        print "Y" * 100
+        return x
 
 
 class ConfigReader(object):
