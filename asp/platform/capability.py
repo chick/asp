@@ -102,3 +102,4 @@ class Capability(object):
     def validate(self):
         #TODO write this
         pass
+

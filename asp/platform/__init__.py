@@ -1,3 +1,8 @@
 __author__ = 'chick'
 
-__all__ = ["capability", "open_mp"]
+__all__ = [
+    "capability",
+    "cuda",
+    "open_cl",
+    "open_mp",
+]

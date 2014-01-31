@@ -5,10 +5,14 @@ import pickle
 from variant_history import *
 import sqlite3
 import asp
+import asp.platform.capability as capability
 import scala_module
 
-class ASPDB(object):
 
+class ASPDB(object):
+    """
+    Manages an sqlite database to keep track of cache of compiled specializers
+    """
     def __init__(self, specializer, persistent=False):
         """
         specializer must be specified so we avoid namespace collisions.
@@ -18,7 +22,8 @@ class ASPDB(object):
         if persistent:
             # create db file or load db
             # create a per-user cache directory
-            import tempfile, os
+            import tempfile
+            import os
             if os.name == 'nt':
                 username = os.environ['USERNAME']
             else:
@@ -37,7 +42,6 @@ class ASPDB(object):
             self.db_file = None
             self.connection = sqlite3.connect(":memory:")
 
-
     def create_specializer_table(self):
         self.connection.execute('create table '+self.specializer+' (fname text, variant text, key text, perf real)')
         self.connection.commit()
@@ -55,10 +59,10 @@ class ASPDB(object):
         return len(result) > 0
 
     def insert(self, fname, variant, key, value):
-        if (not self.table_exists()):
+        if not self.table_exists():
                 self.create_specializer_table()
         self.connection.execute('insert into '+self.specializer+' values (?,?,?,?)',
-            (fname, variant, key, value))
+                (fname, variant, key, value))
         self.connection.commit()
 
     def get(self, fname, variant=None, key=None):
@@ -91,7 +95,7 @@ class ASPDB(object):
         Updates an entry in the db.  Overwrites the timing information with value.
         If the entry does not exist, does an insert.
         """
-        if (not self.table_exists()):
+        if not self.table_exists():
             self.create_specializer_table()
             self.insert(fname, variant, key, value)
             return
@@ -382,7 +386,6 @@ class ASPModule(object):
                                                 scala_module.ScalaToolchain(),
                                                 self.cache_dir)
 
-
     def add_library(self, feature, include_dirs, library_dirs=[], libraries=[], backend="c++"):
         self.backends[backend].toolchain.add_library(feature, include_dirs, library_dirs, libraries)
         
@@ -468,4 +471,16 @@ class ASPModule(object):
             src += str(self.backends[x].module.generate())
 
         return src
+
+    def validate(self):
+        result = True
+        if self.use_cuda and not capability.Cuda.has_cuda():
+            print "Cuda required, not available"
+            result = False
+        elif self.use_opencl and not capability.AspOpenCl.has_cuda():
+            print "OpenCl required, not available"
+            result = False
+
+        return result
+
 
