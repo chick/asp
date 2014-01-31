@@ -336,6 +336,10 @@ class ASPModule(object):
         self.helper_method_names = []
 
         self.db = ASPDB(specializer)
+
+        self.use_cuda = use_cuda
+        self.use_opencl = use_opencl
+
         
         if cache_dir:
             self.cache_dir = cache_dir
