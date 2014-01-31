@@ -39,7 +39,7 @@ class CpText(unittest.TestCase):
         assert num_cores == 0
 
 
-class MacTest(unittest.TestCase):
+class CapabilityTest(unittest.TestCase):
     mac_raw_info = open("mac_raw_info.txt","r").readlines()
     linux_raw_info = open("linux_raw_info.txt","r").readlines()
 
@@ -57,7 +57,7 @@ class MacTest(unittest.TestCase):
 
     def test_num_cores_mac(self):
         c = capability.Capability()
-        with patched_context( c, 'get_raw_info', lambda x: MacTest.mac_raw_info ):
+        with patched_context( c, 'get_raw_info', lambda x: CapabilityTest.mac_raw_info ):
             assert sum( 'machdep.cpu' in x for x in c.get_raw_info() ) > 0
             c.update_info()
 
@@ -67,7 +67,7 @@ class MacTest(unittest.TestCase):
     def test_num_cores_linux(self):
         with patched_context(sys, 'platform', "linux2" ):
             c = capability.Capability()
-            with patched_context( c, 'get_raw_info', lambda x: MacTest.linux_raw_info ):
+            with patched_context( c, 'get_raw_info', lambda x: CapabilityTest.linux_raw_info ):
                 assert sum( 'processor' in x for x in c.get_raw_info() ) > 0
                 c.update_info()
 

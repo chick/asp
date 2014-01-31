@@ -377,8 +377,6 @@ class ASPModule(object):
             self.backends["openmp"].toolchain.cflags += ["-fopenmp"]
         if use_opencl:
             self.backends["opencl"] = self.backends["c++"]
-            if platform.system() == 'darwin':
-                self.backends["opencl"].toolchain.cflags += ["-fopenmp"]
         if use_scala:
             self.backends["scala"] = ASPBackend(scala_module.ScalaModule(),
                                                 scala_module.ScalaToolchain(),

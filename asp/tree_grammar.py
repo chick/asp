@@ -97,12 +97,12 @@ from collections import defaultdict
 
 keywords = ('check',)
 
-tokens = keywords + ('ID','embedded_python')
+tokens = keywords + ('ID', 'embedded_python')
 
 literals = ['=', '|', '*', '(', ')', ',', '.']
 
 states = (
-   ('check','exclusive'),
+   ('check', 'exclusive'),
 )
 
 # Borrowed from basiclex.py in ply-3.4 examples
@@ -214,15 +214,14 @@ def p_expression(p):
             p[0] = OneOf([p[1], p[3]])
 
 def p_class_name(p):
-    '''class_name : ID
-                  | class_name '.' ID'''
+    """class_name : ID | class_name '.' ID"""
     if len(p) == 2:
         p[0] = p[1]
     else:
         p[0] = "%s.%s" % (p[1], p[3])
 
 def p_alternatives_rule(p):
-    'alternatives_rule : ID "=" alternatives_list'
+    """alternatives_rule : ID "=" alternatives_list"""
     p[0] = AlternativesRule(p[1], p[3])
 
 def p_alternatives_list(p):

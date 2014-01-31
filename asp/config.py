@@ -96,17 +96,16 @@ class PlatformDetector(object):
         return info
 
     def get_cpu_info(self):
-        print "Z" * 100
-
         self.rawinfo = self.read_cpu_info()
-        print "Z" * 100
-        info = {}
-        info['numCores'] = self.parse_num_cores()
-        info['vendorID'] = self.parse_cpu_info('vendor_id')
-        info['model'] = int(self.parse_cpu_info('model'))
-        info['cpuFamily'] = int(self.parse_cpu_info('cpu family'))
-        info['cacheSize'] = int(self.parse_cpu_info('cache size'))
-        info['capabilities'] = self.parse_capabilities()
+
+        info = {
+            'numCores':     self.parse_num_cores(),
+            'vendorID':     self.parse_cpu_info('vendor_id'),
+            'model':        int(self.parse_cpu_info('model')),
+            'cpuFamily':    int(self.parse_cpu_info('cpu family')),
+            'cacheSize':    int(self.parse_cpu_info('cache size')),
+            'capabilities': self.parse_capabilities()
+        }
         return info
 
     def get_compilers(self):
