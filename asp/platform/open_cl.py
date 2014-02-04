@@ -18,3 +18,8 @@ class OpenCl(object):
                 OpenCl._is_available = True
             pass
         return OpenCl._is_available
+
+    @staticmethod
+    def install():
+        print "asp:open_cl:install is unsupported"
+        raise Exception

@@ -1,10 +1,17 @@
 import unittest
+import sys
+import os
+
+script_dir = os.path.dirname(os.path.abspath(__file__))
+sys.path.append(os.path.join(script_dir, ".."))
 
 from array_map import *
+
 
 class ArrayMapExample(ArrayMap):
     def operation(self, x):
         return 2*x+5
+
 
 class BasicTests(unittest.TestCase):
     def test_pure_python(self):
