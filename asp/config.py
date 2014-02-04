@@ -17,6 +17,7 @@ class CompilerDetector(object):
 
         return (retcode == 0)
         
+
 class PlatformDetector(object):
     def __init__(self):
         self.rawinfo = []
