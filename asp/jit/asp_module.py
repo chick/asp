@@ -7,6 +7,7 @@ import sqlite3
 import asp
 import asp.platform.capability as capability
 import scala_module
+import asp.utils
 
 
 class ASPDB(object):
@@ -321,13 +322,18 @@ class ASPBackend(object):
 
 
 class ASPModule(object):
-    """
+    """Manage a single specializer
+    keyword arguments such as use_<x> can be used to override information in
+    a .asp_config.yml file in the root directory of the user or specializer
+
     ASPModule is the main coordination class for examples.  A specializer creates an ASPModule to contain
     all of its specialized functions, and adds functions/libraries/etc to the ASPModule.
 
     ASPModule uses ASPBackend instances for each backend, ASPDB for its backing db for recording timing info,
     and instances of SpecializedFunction and HelperFunction for specialized and helper functions, respectively.
     """
+
+    legal_flags = ['use_cuda','use_cilk','use_mpp','use_openmp','use_opencl','use_tbb','use_pthreads','use_scala']
 
     #FIXME: specializer should be required.
     def __init__(self, specializer="default_specializer", cache_dir=None, use_cuda=False, use_cilk=False, use_tbb=False, use_pthreads=False, use_scala=False, use_openmp=False, use_opencl=False):
@@ -340,20 +346,7 @@ class ASPModule(object):
         self.use_cuda = use_cuda
         self.use_opencl = use_opencl
 
-        
-        if cache_dir:
-            self.cache_dir = cache_dir
-        else:
-            # create a per-user cache directory
-            import tempfile, os
-            if os.name == 'nt':
-                username = os.environ['USERNAME']
-            else:
-                username = os.environ['LOGNAME']
-
-            self.cache_dir = tempfile.gettempdir() + "/asp_cache_" + username
-            if not os.access(self.cache_dir, os.F_OK):
-                os.mkdir(self.cache_dir)
+        self.cache_dir = get_cache_dir(cache_dir)
 
         self.backends = {}
         self.backends["c++"] = ASPBackend(codepy.bpl.BoostPythonModule(),
@@ -479,7 +472,7 @@ class ASPModule(object):
     def validate(self):
         result = True
         if self.use_cuda and not capability.Cuda.has_cuda():
-            print "Cuda required, not available"
+            print "CudaBackend required, not available"
             result = False
         elif self.use_opencl and not capability.AspOpenCl.has_cuda():
             print "OpenCl required, not available"

@@ -1,3 +1,6 @@
+"""provides a framework for writing SEJITS specializers
+"""
+
 # From http://stackoverflow.com/questions/458550/standard-way-to-embed-version-into-python-package
 # Author: James Antill (http://stackoverflow.com/users/10314/james-antill)
 __version__ = '1.0.0.0'

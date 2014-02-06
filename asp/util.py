@@ -20,4 +20,21 @@ class Singleton(type):
         return cls.instance
 
 
+def get_cache_dir(name=None):
+    if name:
+        cache_dir = name
+    else:
+        import tempfile, os
+        if os.name == 'nt':
+            username = os.environ['USERNAME']
+        else:
+            username = os.environ['LOGNAME']
+
+        cache_dir = tempfile.gettempdir() + "/asp_cache_" + username
+
+    if not os.access(cache_dir, os.F_OK):
+        os.mkdir(cache_dir)
+    return cache_dir
+
+
 

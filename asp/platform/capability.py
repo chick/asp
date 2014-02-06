@@ -3,6 +3,8 @@ __author__ = 'Chick Markley'
 import sys
 import subprocess
 import re
+import abc
+import codepy
 
 
 class CP(object):
@@ -45,13 +47,20 @@ class CompilerDetector(object):
 
 class Capability(object):
     """
-    figure out as much about the current execution environment as possible
+    base class for implementing capabilities
     """
     def __init__(self, mock_info=None):
         self._is_mac = sys.platform == 'darwin'
         self._is_linux = sys.platform.find('linux') != -1
         self.mock_info = mock_info
         self.raw_info = None
+        self.tool_chain =  codepy.toolchain.guess_toolchain()
+
+    @staticmethod
+    @abc.abstractmethod
+    def is_present():
+        """override this to indicate whether sub-classed capability is present"""
+        return
 
     def get_compilers(self):
         pass

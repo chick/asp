@@ -16,7 +16,7 @@ class CompilerDetector(object):
             return False
 
         return (retcode == 0)
-        
+
 
 class PlatformDetector(object):
     def __init__(self):
