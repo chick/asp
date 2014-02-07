@@ -7,7 +7,7 @@ import sqlite3
 import asp
 import asp.platform.capability as capability
 import scala_module
-import asp.utils
+import asp.util
 
 
 class ASPDB(object):
@@ -475,7 +475,7 @@ class ASPModule(object):
             print "CudaBackend required, not available"
             result = False
         elif self.use_opencl and not capability.AspOpenCl.has_cuda():
-            print "OpenCl required, not available"
+            print "OpenClBackend required, not available"
             result = False
 
         return result

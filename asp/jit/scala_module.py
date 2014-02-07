@@ -49,7 +49,7 @@ class PseudoModule:
         if name in self.__dict__["__special_functions"].keys():
             return self.__dict__["__special_functions"][name]
         else:
-            raise Error
+            raise Exception("%s not found in PseudoModule" % name)
 
     def __setattr__(self, name, value):
         self.__dict__["__special_functions"][name] = value
@@ -76,7 +76,7 @@ class ScalaModule:
         s = ""
         for line in self.mod_body:
             if type(line) != str:
-                raise Error("Not a string")
+                raise Exception("Not a string")
             s += line
         return s
 

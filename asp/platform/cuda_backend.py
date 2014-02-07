@@ -9,6 +9,7 @@ import codepy.bpl
 import codepy.cuda
 import asp.util
 from asp.jit.asp_module import ASPBackend
+from asp.jit.asp_module import HelperFunction
 from asp.platform.capability import CompilerDetector
 
 
@@ -18,7 +19,7 @@ class CudaBackend(ASPBackend):
     """
 
     def __init__(self, cache_dir=None):
-        super(ASPBackend, self).__init__(
+        super(CudaBackend, self).__init__(
             codepy.bpl.BoostPythonModule(),
             codepy.toolchain.guess_nvcc_toolchain(),
             asp.util.get_cache_dir(cache_dir),
@@ -61,17 +62,25 @@ class CudaBackend(ASPBackend):
                 return bytes;
             }""", "device_total_mem")]
 
+        self.local_utility_functions = {}
         for body, name in cuda_util_funcs:
-            self.module.add_helper_function(body, name, backend='cuda')
+            self.local_utility_functions[name] = HelperFunction(name,body,self)
+#            self.add_helper_function(body, name, backend='cuda')
 
         self.cuda_device_id = None
 
+    def __getattr__(self, name):
+        if name in self.local_utility_functions:
+            return self.local_utility_functions[name]
+        else:
+            raise AttributeError("No method %s found; did you add it to this ASPModule?" % name)
+
     def get_num_cuda_devices(self):
-        return self.module.get_device_count()
+        return self.get_device_count()
 
     def set_cuda_device(self, device_id):
         self.cuda_device_id = device_id
-        self.module.set_device(device_id)
+        self.set_device(device_id)
 
     def get_cuda_info(self):
         info = {}
@@ -88,9 +97,9 @@ class CudaBackend(ASPBackend):
             ('max_shared_memory_per_block', 8)]
         d = self.cuda_device_id
         for key, attr in attribute_list:
-            info[key] = self.module.device_get_attribute(attr, d)
-        info['total_mem'] = self.module.device_total_mem(d)
-        version = self.module.device_compute_capability(d)
+            info[key] = self.device_get_attribute(attr, d)
+        info['total_mem'] = self.device_total_mem(d)
+        version = self.device_compute_capability(d)
         info['capability'] = version
         info['supports_int32_atomics_in_global'] = False if version in [(1, 0)] else True
         info['supports_int32_atomics_in_shared'] = False if version in [(1, 0), (1, 1)] else True

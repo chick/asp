@@ -1,16 +1,22 @@
 # adapted from CodePy's nvcc example.
 # requires PyCuda, CodePy, ASP, and CUDA 3.0+
 
-from codepy.cgen import *
-from codepy.bpl import BoostPythonModule
-from codepy.cuda import CudaModule
-from cgen.cuda import CudaGlobal
-import asp.jit.asp_module as asp_module
+from asp.jit.asp_module import ASPModule
+from asp.platform.cuda_backend import CudaBackend
+
 import unittest2 as unittest
 
+
 class CUDATest(unittest.TestCase):
+    def test_cuda_backend(self):
+        self.assertTrue(CudaBackend.is_present())
+
+        backend = CudaBackend()
+        self.assertTrue(backend is not None)
+
     def test_cuda(self):
-        mod = asp_module.ASPModule(use_cuda=True)
+        pass
+        mod = ASPModule(use_cuda=True)
 
         # create the host code
         mod.add_to_preamble("""
