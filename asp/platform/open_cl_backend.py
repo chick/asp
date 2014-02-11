@@ -43,7 +43,6 @@ class OpenClBackend(ASPBackend):
         import tempfile
         import os.path
 
-        print 'in run_hello'
         file_name = os.path.join(tempfile.gettempdir(), "hello.c")
         compiled_name = os.path.join(tempfile.gettempdir(), "hello")
         with open(file_name, "w") as f:
@@ -261,7 +260,7 @@ int main(int argc, char** argv)
 
     // Print a brief summary detailing the results
     //
-    printf("Computed '%d/%d' correct values!\\n", correct, count);
+    // printf("Computed '%d/%d' correct values!\\n", correct, count);
 
     // Shutdown and cleanup
     //
