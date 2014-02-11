@@ -51,9 +51,9 @@ class OpenClBackend(ASPBackend):
 
         import subprocess
         command = 'gcc -o %s %s -framework opencl' % (compiled_name, file_name)
-        print subprocess.check_output(command.split(' '))
-        result = subprocess.check_output(compiled_name)
-        return 'correct values' in result
+        print subprocess.call(command.split(' '))
+        result = subprocess.call(compiled_name)
+        return 0 == result
 
     apple_hello_world = """
 //
