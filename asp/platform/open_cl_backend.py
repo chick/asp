@@ -4,7 +4,7 @@ import codepy
 import codepy.jit
 import codepy.toolchain
 import codepy.bpl
-import asp.platform.capability as capability
+from asp.platform import base_platform
 import asp.util
 from asp.jit.asp_module import ASPBackend
 
@@ -23,11 +23,12 @@ class OpenClBackend(ASPBackend):
     _is_available = None
 
     @staticmethod
+    @asp.util.memoized
     def is_present():
         if OpenClBackend._is_available is None:
-            if capability.Capability().is_mac():
+            if base_platform.is_mac():
                 OpenClBackend._is_available = True
-            elif capability.Capability().is_linux():
+            elif base_platform.is_linux():
                 OpenClBackend._is_available = True
             pass
         return OpenClBackend._is_available
@@ -38,7 +39,6 @@ class OpenClBackend(ASPBackend):
         raise Exception
 
     @staticmethod
-    @asp.util.memoized
     def run_hello():
         import tempfile
         import os.path

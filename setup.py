@@ -46,7 +46,8 @@ setup(name="asp",
         "mock",
         "discover",
         "PyYAML",
-        "avro"
+        "avro",
+        "fudge",
 
           ],
 

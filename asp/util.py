@@ -9,6 +9,12 @@ def debug_print(*args):
         print()
 
 
+def singleton(cls):
+    instance = cls()
+    instance.__call__ = lambda: instance
+    return instance
+
+
 class Singleton(type):
     def __init__(cls, name, bases, dict):
         super(Singleton, cls).__init__(name, bases, dict)

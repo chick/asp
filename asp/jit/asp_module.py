@@ -1,4 +1,5 @@
 import codepy, codepy.jit, codepy.toolchain, codepy.bpl, codepy.cuda
+import abc
 from asp.util import *
 import asp.codegen.cpp_ast as cpp_ast
 import pickle
@@ -279,6 +280,7 @@ class HelperFunction(SpecializedFunction):
             self.backend.compile()
         return self.backend.get_compiled_function(self.name).__call__(*args, **kwargs)
 
+
 class ASPBackend(object):
     """
     Class to encapsulate a backend for Asp.  A backend is the combination of a CodePy module
@@ -319,6 +321,12 @@ class ASPBackend(object):
             raise AttributeError("Function %s not found in compiled module." % (name,))
 
         return func
+
+    @staticmethod
+    @abc.abstractmethod
+    def is_present():
+        """override this to indicate whether sub-classed capability is present"""
+        return
 
 
 class ASPModule(object):
