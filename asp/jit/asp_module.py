@@ -187,15 +187,15 @@ class ASPModule(object):
         if use_tbb:
             # Intel Thread Building Blocks
             self.backends["tbb"] = self.backends["c++"]
-            self.backends["tbb"].toolchain.cflags += ["-ltbb"]
+            self.backends["tbb"].add_cflags("-ltbb")
         if use_pthreads:
             self.backends["pthreads"] = self.backends["c++"]
-            self.backends["pthreads"].toolchain.cflags += ["-pthread"]
+            self.backends["pthreads"].add_cflags("-pthread")
         if use_openmp:
             self.backends["openmp"] = self.backends["c++"]
             # TODO make this compiler dependent, this should work, but some compilers
             # use other flags see: http://openmp.org/wp/openmp-compilers/
-            self.backends["openmp"].toolchain.cflags += ["-fopenmp"]
+            self.backends["openmp"].add_cflags("-fopenmp")
         if use_opencl:
             self.backends["opencl"] = self.backends["c++"]
         if use_scala:
@@ -210,7 +210,7 @@ class ASPModule(object):
         archflag = '-arch='
         if 'sm_' not in arch: archflag += 'sm_'
         archflag += arch
-        self.backends["cuda"].toolchain.cflags += [archflag]
+        self.backends["cuda"].add_cflags(archflag)
 
     def add_header(self, include_file, brackets=False, backend="c++"):
         """

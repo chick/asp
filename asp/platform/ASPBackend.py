@@ -44,6 +44,9 @@ class ASPBackend(object):
 
         return func
 
+    def add_cflags(self, *args):
+        self.toolchain.cflags += list(args)
+
     @staticmethod
     @abc.abstractmethod
     def is_present():

@@ -114,9 +114,6 @@ class CudaBackend(ASPBackend):
         info['supports_float32_atomic_add'] = False if version[0] == 1 else True
         return info
 
-    def add_cflags(self, *args):
-        self.toolchain.cflags += list(args)
-
     #
     # the following are static class methods
     #
