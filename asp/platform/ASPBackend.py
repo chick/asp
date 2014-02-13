@@ -20,8 +20,7 @@ class ASPBackend(object):
 
     def compile(self):
         """
-        Trigger a compile of this backend.  Note that CUDA needs to know about
-        the C++ backend as well.
+        Trigger a compile of this backend.
         """
         if not self.compilable: return
         self.compiled_module = self.module.compile(self.toolchain,
