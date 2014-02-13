@@ -55,6 +55,8 @@ class SpecializedFunction(object):
         self.variant_funcs.append(variant_func)
         self.run_check_funcs.append(run_check_func)
 
+        # TODO: Move all this logic to backends, and do it with one function
+        # call.
         if isinstance(self.backend.module, scala_module.ScalaModule):
             self.backend.module.add_to_module(variant_func)
             self.backend.module.add_to_init(variant_name)
