@@ -228,10 +228,7 @@ class ASPModule(object):
     def add_to_init(self, stmt, backend="c++"):
         if isinstance(stmt, str):
             stmt = [cpp_ast.Line(stmt)]
-        if backend == "cuda":
-            self.backends[backend].module.boost_module.add_to_init(stmt) #HACK because codepy's CudaModule doesn't have add_to_init()
-        else:
-            self.backends[backend].module.add_to_init(stmt)
+        self.backends[backend].add_to_init(stmt)
 
     def add_to_module(self, block, backend="c++"):
         if isinstance(block, basestring):

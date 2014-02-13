@@ -113,6 +113,14 @@ class CudaBackend(ASPBackend):
         info['supports_float32_atomic_add'] = False if version[0] == 1 else True
         return info
 
+    def add_to_init(self, statement):
+        # ORIGINAL COMMENT: HACK because codepy's CudaModule doesn't have add_to_init()
+        self.module.boost_module.add_to_init(statment)
+
+    def add_variant_func(self, variant_func, variant_name, call_policy):
+        self.module.boost_module.add_to_module([cpp_ast.Line(variant_func)])
+        self.module.boost_module.add_to_init([cpp_ast.Statement("boost::python::def(\"%s\", &%s)" % (variant_name, variant_name))])
+
     #
     # the following are static class methods
     #

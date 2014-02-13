@@ -20,7 +20,8 @@ class CUDATest(unittest.TestCase):
         boost = ASPBackend(codepy.bpl.BoostPythonModule(),
                                           codepy.toolchain.guess_toolchain(),
                                           get_cache_dir())
-        backend = CudaBackend(boost, cflags=["-shared"])
+        backend = CudaBackend(boost)
+        backend.add_cflags('-shared')
         self.assertTrue(backend is not None)
         self.assertTrue("-shared" in backend.toolchain.cflags)
 

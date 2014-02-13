@@ -59,15 +59,8 @@ class SpecializedFunction(object):
             self.backend.module.add_to_module(variant_func)
             self.backend.module.add_to_init(variant_name)
         elif isinstance(variant_func, basestring):
-            if isinstance(self.backend.module, codepy.cuda.CudaModule):#HACK because codepy's CudaModule doesn't have add_to_init()
-                self.backend.module.boost_module.add_to_module([cpp_ast.Line(variant_func)])
-                self.backend.module.boost_module.add_to_init([cpp_ast.Statement("boost::python::def(\"%s\", &%s)" % (variant_name, variant_name))])
-            else:
-                self.backend.module.add_to_module([cpp_ast.Line(variant_func)])
-                if self.call_policy == "python_gc":
-                    self.backend.module.add_to_init([cpp_ast.Statement("boost::python::def(\"%s\", &%s, boost::python::return_value_policy<boost::python::manage_new_object>())" % (variant_name, variant_name))])
-                else:
-                    self.backend.module.add_to_init([cpp_ast.Statement("boost::python::def(\"%s\", &%s)" % (variant_name, variant_name))])
+            self.backend.add_variant_func(variant_func, variant_name,
+                                          self.call_policy)
         else:
             self.backend.module.add_function(variant_func)
 
