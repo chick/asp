@@ -19,7 +19,7 @@ class CudaBackend(ASPBackend):
     encapsulates knowledge about using cuda
     """
 
-    def __init__(self, boost_backend, cache_dir=None, cflags=[]):
+    def __init__(self, boost_backend, cache_dir=None):
         super(CudaBackend, self).__init__(
             codepy.cuda.CudaModule(boost_backend.module),
             codepy.toolchain.guess_nvcc_toolchain(),
@@ -69,7 +69,6 @@ class CudaBackend(ASPBackend):
 #            self.add_helper_function(body, name, backend='cuda')
         # TODO: Decide if this should default to always true?
         self.module.boost_module.add_to_preamble([cpp_ast.Include('cuda_runtime.h')])
-        self.add_cflags(*cflags)
 
         self.cuda_device_id = None
 

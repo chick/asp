@@ -180,7 +180,8 @@ class ASPModule(object):
                                           self.cache_dir)
         if use_cuda:
             self.backends['cuda'] = CudaBackend(self.backends['c++'],
-                self.cache_dir, use_runtime=True, cflags=["-shared"])
+                self.cache_dir)
+            self.backends['cuda'].add_cflags('-shared')
         if use_cilk:
             self.backends["cilk"] = self.backends["c++"]
             self.backends["cilk"].toolchain.cc = "icc"
