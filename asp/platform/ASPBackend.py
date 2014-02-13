@@ -24,15 +24,9 @@ class ASPBackend(object):
         the C++ backend as well.
         """
         if not self.compilable: return
-        if isinstance(self.module, codepy.cuda.CudaModule):
-            self.compiled_module = self.module.compile(self.host_toolchain,
-                                                       self.toolchain,
-                                                       debug=True,
-                                                       cache_dir=self.cache_dir)
-        else:
-            self.compiled_module = self.module.compile(self.toolchain,
-                                                       debug=True,
-                                                       cache_dir=self.cache_dir)
+        self.compiled_module = self.module.compile(self.toolchain,
+                                                   debug=True,
+                                                   cache_dir=self.cache_dir)
         self.dirty = False
 
     def get_compiled_function(self, name):

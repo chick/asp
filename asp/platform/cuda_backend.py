@@ -113,6 +113,15 @@ class CudaBackend(ASPBackend):
         info['supports_float32_atomic_add'] = False if version[0] == 1 else True
         return info
 
+    def compile(self):
+        if not self.compilable: return
+        self.compiled_module
+        self.compiled_module = self.module.compile(self.host_toolchain,
+                                                   self.toolchain,
+                                                   debug=True,
+                                                   cache_dir=self.cache_dir)
+        self.dirty = False
+
     def add_to_init(self, statement):
         # ORIGINAL COMMENT: HACK because codepy's CudaModule doesn't have add_to_init()
         self.module.boost_module.add_to_init(statment)
