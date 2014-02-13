@@ -8,9 +8,10 @@ import codepy.toolchain
 import codepy.bpl
 import codepy.cuda
 import asp.util
-from asp.jit.asp_module import ASPBackend
-from asp.jit.asp_module import HelperFunction
+from asp.jit.specialized_functions import HelperFunction
+from asp.platform.ASPBackend import ASPBackend
 from asp.platform.capability import CompilerDetector
+import asp.codegen.cpp_ast as cpp_ast
 
 
 class CudaBackend(ASPBackend):
@@ -18,12 +19,12 @@ class CudaBackend(ASPBackend):
     encapsulates knowledge about using cuda
     """
 
-    def __init__(self, cache_dir=None):
+    def __init__(self, boost_backend, cache_dir=None, cflags=[]):
         super(CudaBackend, self).__init__(
-            codepy.bpl.BoostPythonModule(),
+            codepy.cuda.CudaModule(boost_backend.module),
             codepy.toolchain.guess_nvcc_toolchain(),
             asp.util.get_cache_dir(cache_dir),
-            host_toolchain=codepy.toolchain.guess_toolchain()
+            host_toolchain=boost_backend.toolchain
         )
 
         cuda_util_funcs = [("""
@@ -66,6 +67,9 @@ class CudaBackend(ASPBackend):
         for body, name in cuda_util_funcs:
             self.local_utility_functions[name] = HelperFunction(name,body,self)
 #            self.add_helper_function(body, name, backend='cuda')
+        # TODO: Decide if this should default to always true?
+        self.module.boost_module.add_to_preamble([cpp_ast.Include('cuda_runtime.h')])
+        self.add_cflags(*cflags)
 
         self.cuda_device_id = None
 
@@ -109,6 +113,9 @@ class CudaBackend(ASPBackend):
         info['supports_int64_atomics_in_global'] = False if version[0] == 1 else True
         info['supports_float32_atomic_add'] = False if version[0] == 1 else True
         return info
+
+    def add_cflags(self, *args):
+        self.toolchain.cflags += list(args)
 
     #
     # the following are static class methods

@@ -3,19 +3,28 @@
 
 from asp.jit.asp_module import ASPModule
 from asp.platform.cuda_backend import CudaBackend
+from asp.platform.ASPBackend import ASPBackend
+from asp.util import *
 
+import codepy
+import tempfile
+import os
 import unittest2 as unittest
 
 
 class CUDATest(unittest.TestCase):
     def test_cuda_backend(self):
-        self.assertTrue(CudaBackend.is_present())
+        self.assertTrue(CudaBackend.is_present(),
+                        "CUDA is not present on this system")
 
-        backend = CudaBackend()
+        boost = ASPBackend(codepy.bpl.BoostPythonModule(),
+                                          codepy.toolchain.guess_toolchain(),
+                                          get_cache_dir())
+        backend = CudaBackend(boost, cflags=["-shared"])
         self.assertTrue(backend is not None)
+        self.assertTrue("-shared" in backend.toolchain.cflags)
 
     def test_cuda(self):
-        pass
         mod = ASPModule(use_cuda=True)
 
         # create the host code
@@ -60,8 +69,8 @@ class CUDATest(unittest.TestCase):
         """, backend='cuda')
 
         # test a call
-        ret = mod.foo_1() 
+        ret = mod.foo_1()
         self.assertTrue(ret == 0)
-        
+
 if __name__ == '__main__':
     unittest.main()

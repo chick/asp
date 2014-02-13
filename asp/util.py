@@ -30,7 +30,7 @@ def get_cache_dir(name=None):
     if name:
         cache_dir = name
     else:
-        import tempfile, os
+        import tempfile
         if os.name == 'nt':
             username = os.environ['USERNAME']
         else:
