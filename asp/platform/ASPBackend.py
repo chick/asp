@@ -40,7 +40,7 @@ class ASPBackend(object):
 
         return func
 
-    def add_to_init(self, statment):
+    def add_to_init(self, statement):
         self.module.add_to_init(statement)
 
     def add_cflags(self, *args):
