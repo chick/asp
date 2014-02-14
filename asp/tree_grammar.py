@@ -125,11 +125,11 @@ t_check_ignore = ""
 def t_COMMENT(t):
     r'\#[^\n]*\n'
     pass
-    
+
 def t_newlines(t):
     r'\n+'
     t.lexer.lineno += t.value.count("\n")
-    
+
 def t_error(t):
     print("Illegal character '%s'" % t.value[0])
     t.lexer.skip(1)
@@ -137,7 +137,7 @@ def t_error(t):
 def t_check_error(t):
     print("Illegal character '%s'" % t.value[0])
     t.lexer.skip(1)
-    
+
 # Build the lexer
 import asp.ply.lex as lex
 lex.lex()
@@ -186,7 +186,7 @@ def p_field(p):
         p[0] = (p[1], p[3])
 
 def p_checks_list(p):
-    '''checks_list : 
+    '''checks_list :
                    | checks_list check embedded_python'''
     if len(p) == 4:
         p[1].append(p[3])
@@ -214,7 +214,8 @@ def p_expression(p):
             p[0] = OneOf([p[1], p[3]])
 
 def p_class_name(p):
-    """class_name : ID | class_name '.' ID"""
+    """class_name : ID
+                  | class_name '.' ID"""
     if len(p) == 2:
         p[0] = p[1]
     else:
