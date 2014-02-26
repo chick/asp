@@ -6,6 +6,18 @@ import re
 import abc
 import asp.platform.base_platform as base_platform
 
+class CompilerDetector(object):
+    """
+    Detect if a particular compiler is available by trying to run it.
+    """
+    def detect(self, compiler):
+        from pytools.prefork import call_capture_output
+        try:
+            retcode, stdout, stderr = call_capture_output([compiler, "--version"])
+        except:
+            return False
+
+        return (retcode == 0)
 
 class Capability(object):
     """

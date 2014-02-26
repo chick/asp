@@ -8,9 +8,10 @@ import codepy.toolchain
 import codepy.bpl
 import codepy.cuda
 import asp.util
-from asp.jit.asp_module import ASPBackend
-from asp.jit.asp_module import HelperFunction
+from asp.jit.specialized_functions import HelperFunction
+from asp.platform.ASPBackend import ASPBackend
 from asp.platform.capability import CompilerDetector
+import asp.codegen.cpp_ast as cpp_ast
 
 
 class CudaBackend(ASPBackend):
@@ -18,12 +19,12 @@ class CudaBackend(ASPBackend):
     encapsulates knowledge about using cuda
     """
 
-    def __init__(self, cache_dir=None):
+    def __init__(self, boost_backend, cache_dir=None):
         super(CudaBackend, self).__init__(
-            codepy.bpl.BoostPythonModule(),
+            codepy.cuda.CudaModule(boost_backend.module),
             codepy.toolchain.guess_nvcc_toolchain(),
             asp.util.get_cache_dir(cache_dir),
-            host_toolchain=codepy.toolchain.guess_toolchain()
+            host_toolchain=boost_backend.toolchain
         )
 
         cuda_util_funcs = [("""
@@ -66,6 +67,8 @@ class CudaBackend(ASPBackend):
         for body, name in cuda_util_funcs:
             self.local_utility_functions[name] = HelperFunction(name,body,self)
 #            self.add_helper_function(body, name, backend='cuda')
+        # TODO: Decide if this should default to always true?
+        self.module.boost_module.add_to_preamble([cpp_ast.Include('cuda_runtime.h')])
 
         self.cuda_device_id = None
 
@@ -109,6 +112,26 @@ class CudaBackend(ASPBackend):
         info['supports_int64_atomics_in_global'] = False if version[0] == 1 else True
         info['supports_float32_atomic_add'] = False if version[0] == 1 else True
         return info
+
+    def compile(self):
+        """
+        Trigger a compile of this backend.  Note that CUDA needs to know about
+        the C++ backend as well.
+        """
+        if not self.compilable: return
+        self.compiled_module
+        self.compiled_module = self.module.compile(self.host_toolchain,
+                                                   self.toolchain,
+                                                   debug=True,
+                                                   cache_dir=self.cache_dir)
+
+    def add_to_init(self, statement):
+        # ORIGINAL COMMENT: HACK because codepy's CudaModule doesn't have add_to_init()
+        self.module.boost_module.add_to_init(statment)
+
+    def add_variant_func(self, variant_func, variant_name, call_policy):
+        self.module.boost_module.add_to_module([cpp_ast.Line(variant_func)])
+        self.module.boost_module.add_to_init([cpp_ast.Statement("boost::python::def(\"%s\", &%s)" % (variant_name, variant_name))])
 
     #
     # the following are static class methods
