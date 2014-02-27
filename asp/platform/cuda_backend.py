@@ -119,7 +119,6 @@ class CudaBackend(ASPBackend):
         the C++ backend as well.
         """
         if not self.compilable: return
-        self.compiled_module
         self.compiled_module = self.module.compile(self.host_toolchain,
                                                    self.toolchain,
                                                    debug=True,
